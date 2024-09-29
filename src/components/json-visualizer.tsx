@@ -33,20 +33,22 @@ export function JsonVisualizer() {
         onValueChange={setActiveTab}
         className="flex-grow flex flex-col"
       >
-        <TabsList className="w-full">
+        <TabsList className="justify-start">
           <TabsTrigger value="input">Input</TabsTrigger>
           <TabsTrigger value="formatted">Formatted</TabsTrigger>
           <TabsTrigger value="view">View</TabsTrigger>
         </TabsList>
-        <TabsContent value="input" className="flex-grow">
-          <JsonInput jsonInput={jsonInput} setJsonInput={setJsonInput} />
-        </TabsContent>
-        <TabsContent value="formatted" className="flex-grow">
-          <JsonFormatted formattedJson={formattedJson} />
-        </TabsContent>
-        <TabsContent value="view" className="flex-grow">
-          <JsonView parsedJson={parsedJson} error={error} />
-        </TabsContent>
+        <div className="flex-grow">
+          <TabsContent value="input" className="h-full">
+            <JsonInput jsonInput={jsonInput} setJsonInput={setJsonInput} />
+          </TabsContent>
+          <TabsContent value="formatted" className="h-full">
+            <JsonFormatted formattedJson={formattedJson} />
+          </TabsContent>
+          <TabsContent value="view" className="h-full">
+            <JsonView parsedJson={parsedJson} error={error} />
+          </TabsContent>
+        </div>
       </Tabs>
     </div>
   );
