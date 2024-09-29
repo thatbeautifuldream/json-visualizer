@@ -60,23 +60,23 @@ export function JsonInput({ jsonInput, setJsonInput }: JsonInputProps) {
   return (
     <div className="h-full flex flex-col">
       <div className="flex space-x-2 mb-2">
-        <Button onClick={handlePaste} size="sm">
+        <Button onClick={handlePaste} size="xs" variant="outline">
           <Clipboard className="w-4 h-4 mr-2" />
           Paste
         </Button>
-        <Button onClick={handleCopy} size="sm">
+        <Button onClick={handleCopy} size="xs" variant="outline">
           <Copy className="w-4 h-4 mr-2" />
           Copy
         </Button>
-        <Button onClick={handleFormat} size="sm">
+        <Button onClick={handleFormat} size="xs" variant="outline">
           <FileJson className="w-4 h-4 mr-2" />
           Format
         </Button>
-        <Button onClick={handleRemoveWhitespace} size="sm">
+        <Button onClick={handleRemoveWhitespace} size="xs" variant="outline">
           <X className="w-4 h-4 mr-2" />
           Remove whitespace
         </Button>
-        <Button onClick={handleClear} size="sm">
+        <Button onClick={handleClear} size="xs" variant="outline">
           <Trash className="w-4 h-4 mr-2" />
           Clear
         </Button>

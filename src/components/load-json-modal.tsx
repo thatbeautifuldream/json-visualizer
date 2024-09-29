@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { FileJson } from "lucide-react";
 
 interface LoadJsonModalProps {
   onJsonLoaded: (json: string) => void;
@@ -38,7 +39,10 @@ export function LoadJsonModal({ onJsonLoaded }: LoadJsonModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button size="sm">Load JSON</Button>
+        <Button size="xs" variant="outline">
+          <FileJson className="w-4 h-4 mr-2" />
+          Load JSON
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -56,7 +60,9 @@ export function LoadJsonModal({ onJsonLoaded }: LoadJsonModalProps) {
           />
         </div>
         <DialogFooter>
-          <Button onClick={handleLoadJson}>Load</Button>
+          <Button onClick={handleLoadJson} variant="outline">
+            Load
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
