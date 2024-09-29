@@ -11,7 +11,7 @@ const ReactJson = dynamic(() => import("react-json-view"), { ssr: false });
 
 export function JsonVisualizer() {
   const [jsonInput, setJsonInput] = useState("");
-  const [parsedJson, setParsedJson] = useState<object | null>(null);
+  const [parsedJson, setParsedJson] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleVisualize = () => {
@@ -47,7 +47,7 @@ export function JsonVisualizer() {
       {parsedJson && (
         <div className="border rounded-md p-4 bg-white">
           <ReactJson
-            src={parsedJson as object}
+            src={parsedJson}
             theme="rjv-default"
             displayDataTypes={false}
             enableClipboard={false}
