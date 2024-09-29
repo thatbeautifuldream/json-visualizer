@@ -27,7 +27,7 @@ export function JsonVisualizer() {
   }, [jsonInput]);
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col font-inter">
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
