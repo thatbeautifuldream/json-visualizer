@@ -30,7 +30,7 @@ export function LoadJsonModal({ onJsonLoaded }: LoadJsonModalProps) {
       onJsonLoaded(JSON.stringify(json, null, 2));
       setIsOpen(false);
       toast.success("JSON loaded successfully");
-    } catch (error) {
+    } catch {
       toast.error("Failed to load JSON from URL");
     }
   };

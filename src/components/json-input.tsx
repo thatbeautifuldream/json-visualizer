@@ -1,7 +1,7 @@
 import React from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Clipboard, Copy, FileJson, Trash, Upload, X } from "lucide-react";
+import { Clipboard, Copy, FileJson, Trash, X } from "lucide-react";
 import { toast } from "sonner";
 import { LoadJsonModal } from "./load-json-modal";
 
@@ -32,7 +32,8 @@ export function JsonInput({ jsonInput, setJsonInput }: JsonInputProps) {
 
   const handleFormat = () => {
     try {
-      const formatted = JSON.stringify(JSON.parse(jsonInput), null, 2);
+      const parsed = JSON.parse(jsonInput);
+      const formatted = JSON.stringify(parsed, null, 2);
       setJsonInput(formatted);
       toast.success("JSON formatted successfully");
     } catch {
@@ -42,7 +43,8 @@ export function JsonInput({ jsonInput, setJsonInput }: JsonInputProps) {
 
   const handleRemoveWhitespace = () => {
     try {
-      const compact = JSON.stringify(JSON.parse(jsonInput));
+      const parsed = JSON.parse(jsonInput);
+      const compact = JSON.stringify(parsed);
       setJsonInput(compact);
       toast.success("Whitespace removed successfully");
     } catch {
