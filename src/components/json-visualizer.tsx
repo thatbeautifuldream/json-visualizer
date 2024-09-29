@@ -1,60 +1,53 @@
 "use client";
 
-import React, { useState } from "react";
-import dynamic from "next/dynamic";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
-
-const ReactJson = dynamic(() => import("react-json-view"), { ssr: false });
+import React, { useState, useEffect } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { JsonInput } from "@/components/json-input";
+import { JsonFormatted } from "@/components/json-formatted";
+import { JsonView } from "@/components/json-view";
 
 export function JsonVisualizer() {
   const [jsonInput, setJsonInput] = useState("");
   const [parsedJson, setParsedJson] = useState<any>(null);
+  const [formattedJson, setFormattedJson] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("input");
 
-  const handleVisualize = () => {
+  useEffect(() => {
     try {
       const parsed = JSON.parse(jsonInput);
       setParsedJson(parsed);
+      setFormattedJson(JSON.stringify(parsed, null, 2));
       setError(null);
     } catch (err) {
       setError("Invalid JSON: " + (err as Error).message);
       setParsedJson(null);
+      setFormattedJson("");
     }
-  };
+  }, [jsonInput]);
 
   return (
-    <div className="container mx-auto p-4 space-y-4">
-      <h1 className="text-2xl font-bold mb-4">JSON Visualizer</h1>
-      <div className="space-y-2">
-        <Textarea
-          value={jsonInput}
-          onChange={(e) => setJsonInput(e.target.value)}
-          placeholder="Paste your JSON here"
-          className="min-h-[200px] w-full font-mono"
-        />
-        <Button onClick={handleVisualize}>Visualize JSON</Button>
-      </div>
-      {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-      {parsedJson && (
-        <div className="border rounded-md p-4 bg-white">
-          <ReactJson
-            src={parsedJson}
-            theme="rjv-default"
-            displayDataTypes={false}
-            enableClipboard={false}
-            collapsed={1}
-          />
-        </div>
-      )}
+    <div className="h-screen flex flex-col">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="flex-grow flex flex-col"
+      >
+        <TabsList className="w-full">
+          <TabsTrigger value="input">Input</TabsTrigger>
+          <TabsTrigger value="formatted">Formatted</TabsTrigger>
+          <TabsTrigger value="view">View</TabsTrigger>
+        </TabsList>
+        <TabsContent value="input" className="flex-grow">
+          <JsonInput jsonInput={jsonInput} setJsonInput={setJsonInput} />
+        </TabsContent>
+        <TabsContent value="formatted" className="flex-grow">
+          <JsonFormatted formattedJson={formattedJson} />
+        </TabsContent>
+        <TabsContent value="view" className="flex-grow">
+          <JsonView parsedJson={parsedJson} error={error} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
