@@ -4,20 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Clipboard, Copy, FileJson, Trash, X } from "lucide-react";
 import { toast } from "sonner";
 import { LoadJsonModal } from "./load-json-modal";
+import { fixJSON } from "@/lib/utils";
 
 interface JsonInputProps {
   jsonInput: string;
   setJsonInput: (value: string) => void;
-}
-
-function attemptJsonFix(input: string): string {
-  let fixed = input.replace(/,\s*([\]}])/g, "$1");
-  fixed = fixed.replace(
-    /(\s*?{\s*?|\s*?,\s*?)(['"])?([a-zA-Z0-9_]+)(['"])?:/g,
-    '$1"$3":'
-  );
-  fixed = fixed.replace(/:(\s*?)'(.*?)'(\s*?[,}])/g, ':"$2"$3');
-  return fixed;
 }
 
 export function JsonInput({ jsonInput, setJsonInput }: JsonInputProps) {
@@ -42,8 +33,7 @@ export function JsonInput({ jsonInput, setJsonInput }: JsonInputProps) {
 
   const handleFormat = () => {
     try {
-      const fixedInput = attemptJsonFix(jsonInput);
-      const parsed = JSON.parse(fixedInput);
+      const parsed = JSON.parse(jsonInput);
       const formatted = JSON.stringify(parsed, null, 2);
       setJsonInput(formatted);
       toast.success("JSON formatted successfully");
