@@ -1,10 +1,8 @@
-import React from "react";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Clipboard, Copy, FileJson, Trash, X } from "lucide-react";
 import { toast } from "sonner";
 import { LoadJsonModal } from "./load-json-modal";
-import { fixJSON } from "@/lib/utils";
 
 interface JsonInputProps {
   jsonInput: string;
