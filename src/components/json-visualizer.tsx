@@ -52,7 +52,10 @@ export function JsonVisualizer() {
             }
           >
             <Github className="w-4 h-4 mr-2" />
-            thatbeautifuldream/json-visualizer
+            <span className="hidden sm:inline">
+              thatbeautifuldream/json-visualizer
+            </span>
+            <span className="inline sm:hidden">json-viz</span>
           </Button>
         </div>
         <div className="flex-grow flex flex-col">

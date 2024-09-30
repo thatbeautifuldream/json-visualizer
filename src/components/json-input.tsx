@@ -59,7 +59,7 @@ export function JsonInput({ jsonInput, setJsonInput }: JsonInputProps) {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex space-x-2 mb-2">
+      <div className="flex space-x-2 mb-2 overflow-x-auto whitespace-nowrap">
         <Button onClick={handlePaste} size="xs" variant="outline">
           <Clipboard className="w-4 h-4 mr-2" />
           Paste
