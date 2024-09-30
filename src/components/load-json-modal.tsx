@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { FileJson } from "lucide-react";
+import { FileJson, Loader2 } from "lucide-react";
 
 interface LoadJsonModalProps {
   onJsonLoaded: (json: string) => void;
@@ -20,8 +20,12 @@ interface LoadJsonModalProps {
 export function LoadJsonModal({ onJsonLoaded }: LoadJsonModalProps) {
   const [url, setUrl] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLoadJson = async () => {
+    if (!url) return;
+
+    setIsLoading(true);
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -33,6 +37,14 @@ export function LoadJsonModal({ onJsonLoaded }: LoadJsonModalProps) {
       toast.success("JSON loaded successfully");
     } catch {
       toast.error("Failed to load JSON from URL");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleLoadJson();
     }
   };
 
@@ -56,12 +68,25 @@ export function LoadJsonModal({ onJsonLoaded }: LoadJsonModalProps) {
             id="json-url"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
+            onKeyPress={handleKeyPress}
             placeholder="https://api.example.com/data.json"
+            disabled={isLoading}
           />
         </div>
         <DialogFooter>
-          <Button onClick={handleLoadJson} variant="outline">
-            Load
+          <Button
+            onClick={handleLoadJson}
+            variant="outline"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Loading
+              </>
+            ) : (
+              "Load"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>
