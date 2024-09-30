@@ -10,6 +10,16 @@ interface JsonInputProps {
   setJsonInput: (value: string) => void;
 }
 
+function attemptJsonFix(input: string): string {
+  let fixed = input.replace(/,\s*([\]}])/g, "$1");
+  fixed = fixed.replace(
+    /(\s*?{\s*?|\s*?,\s*?)(['"])?([a-zA-Z0-9_]+)(['"])?:/g,
+    '$1"$3":'
+  );
+  fixed = fixed.replace(/:(\s*?)'(.*?)'(\s*?[,}])/g, ':"$2"$3');
+  return fixed;
+}
+
 export function JsonInput({ jsonInput, setJsonInput }: JsonInputProps) {
   const handlePaste = async () => {
     try {
@@ -32,12 +42,13 @@ export function JsonInput({ jsonInput, setJsonInput }: JsonInputProps) {
 
   const handleFormat = () => {
     try {
-      const parsed = JSON.parse(jsonInput);
+      const fixedInput = attemptJsonFix(jsonInput);
+      const parsed = JSON.parse(fixedInput);
       const formatted = JSON.stringify(parsed, null, 2);
       setJsonInput(formatted);
       toast.success("JSON formatted successfully");
-    } catch {
-      toast.error("Invalid JSON: Unable to format");
+    } catch (error) {
+      toast.error(`Invalid JSON: ${(error as Error).message}`);
     }
   };
 
