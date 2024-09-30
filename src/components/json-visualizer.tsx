@@ -33,7 +33,7 @@ export function JsonVisualizer() {
       >
         <div className="bg-gray-100 px-4 py-2 flex items-center justify-between shadow-sm">
           <div className="flex items-center space-x-4">
-            <h1 className="text-sm font-medium text-gray-800">
+            <h1 className="text-sm font-semibold text-gray-800">
               JSON Visualizer
             </h1>
             <TabsList>
