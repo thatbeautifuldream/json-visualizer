@@ -1,3 +1,4 @@
+import SonnerProvider from "./sonner-provider";
 import { ThemeProvider } from "./theme-provider";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
@@ -8,7 +9,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      {children}
+      <SonnerProvider>{children}</SonnerProvider>
     </ThemeProvider>
   );
 }
