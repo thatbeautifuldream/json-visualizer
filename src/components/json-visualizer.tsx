@@ -3,12 +3,13 @@
 import { JsonInput } from "@/components/json-input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Braces, Github, Loader2 } from "lucide-react";
+import { Braces, Github } from "lucide-react";
+import { useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
 import { JsonGrid } from "./json-grid";
 import { JsonView } from "./json-view";
+import Loader from "./loader";
 import { ModeToggle } from "./mode-toggle";
-import { useQueryState } from "nuqs";
 
 export function JsonVisualizer() {
   const [activeTab, setActiveTab] = useQueryState("tab", {
@@ -123,18 +124,14 @@ export function JsonVisualizer() {
           </TabsContent>
           <TabsContent value="tree" className="flex-grow p-4">
             {isLoading ? (
-              <div className="flex items-center justify-center">
-                <Loader2 className="w-4 h-4 animate-spin" />
-              </div>
+              <Loader />
             ) : (
               parsedJson && <JsonView parsedJson={parsedJson} error={error} />
             )}
           </TabsContent>
           <TabsContent value="grid" className="flex-grow p-4">
             {isLoading ? (
-              <div className="flex items-center justify-center">
-                <Loader2 className="w-4 h-4 animate-spin" />
-              </div>
+              <Loader />
             ) : (
               parsedJson && <JsonGrid data={parsedJson} error={error} />
             )}
