@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
+import Providers from "@/lib/providers";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
@@ -18,8 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={nunito.className}>
-        <Toaster richColors position="bottom-right" />
-        {children}
+        <Providers>
+          <Toaster richColors position="bottom-right" />
+          {children}
+        </Providers>
       </body>
     </html>
   );

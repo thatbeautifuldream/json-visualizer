@@ -19,8 +19,8 @@ export function JsonGrid({ data, error }: JsonGridProps) {
     );
   }
   return (
-    <div className="h-full overflow-auto">
-      <JSONGrid data={data} theme="defaultLight" />
+    <div className="h-full  overflow-auto">
+      <JSONGrid className="font-mono" data={data} theme="defaultLight" />
     </div>
   );
 }
