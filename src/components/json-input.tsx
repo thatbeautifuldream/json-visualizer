@@ -56,6 +56,10 @@ export function JsonInput({ jsonInput, setJsonInput }: JsonInputProps) {
     toast.info("Input cleared");
   };
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setJsonInput(event.target.value);
+  };
+
   return (
     <div className="h-full flex flex-col">
       <div className="flex space-x-2 mb-2 overflow-x-auto whitespace-nowrap">
@@ -83,7 +87,7 @@ export function JsonInput({ jsonInput, setJsonInput }: JsonInputProps) {
       </div>
       <Textarea
         value={jsonInput}
-        onChange={(e) => setJsonInput(e.target.value)}
+        onChange={handleInputChange}
         placeholder="Paste your JSON here"
         className="flex-grow resize-none font-mono"
       />
