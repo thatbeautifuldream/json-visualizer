@@ -3,17 +3,22 @@
 import { JsonInput } from "@/components/json-input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Github } from "lucide-react";
+import { Braces, Github } from "lucide-react";
 import { useEffect, useState } from "react";
 import { JsonGrid } from "./json-grid";
 import { JsonView } from "./json-view";
 import { ModeToggle } from "./mode-toggle";
+import { useQueryState } from "nuqs";
 
 export function JsonVisualizer() {
   const [jsonInput, setJsonInput] = useState("");
   const [parsedJson, setParsedJson] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState("input");
+  const [activeTab, setActiveTab] = useQueryState("tab", {
+    defaultValue: "input",
+    parse: (value) =>
+      ["input", "tree", "grid"].includes(value) ? value : "input",
+  });
 
   useEffect(() => {
     try {
@@ -30,13 +35,18 @@ export function JsonVisualizer() {
     <div className="h-screen flex flex-col font-inter">
       <Tabs
         value={activeTab}
-        onValueChange={setActiveTab}
+        onValueChange={(value) =>
+          setActiveTab(value as "input" | "tree" | "grid")
+        }
         className="flex-grow flex flex-col"
       >
         <div className="bg-gray-100 dark:bg-black px-4 py-2 flex items-center justify-between shadow-sm">
           <div className="flex items-center space-x-4">
             <h1 className="text-md font-bold text-gray-800 dark:text-white">
-              JSON Visualizer
+              <div className="block sm:hidden">
+                <Braces className="w-4 h-4" />
+              </div>
+              <span className="hidden sm:block">JSON Visualizer</span>
             </h1>
             <TabsList className="bg-gray-200 dark:bg-gray-900">
               <TabsTrigger
@@ -75,7 +85,7 @@ export function JsonVisualizer() {
               <span className="hidden sm:inline">
                 thatbeautifuldream/json-visualizer
               </span>
-              <span className="inline sm:hidden">json-viz</span>
+              <span className="inline sm:hidden">{`{json-viz}`}</span>
             </Button>
             <ModeToggle />
           </div>
