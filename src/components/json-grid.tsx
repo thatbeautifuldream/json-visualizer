@@ -2,6 +2,7 @@ import React from "react";
 import JSONGrid from "@redheadphone/react-json-grid";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { AlertCircle } from "lucide-react";
+import { useTheme } from "next-themes";
 
 interface JsonGridProps {
   data: any;
@@ -9,6 +10,7 @@ interface JsonGridProps {
 }
 
 export function JsonGrid({ data, error }: JsonGridProps) {
+  const { theme } = useTheme();
   if (error) {
     return (
       <Alert variant="destructive">
@@ -20,7 +22,11 @@ export function JsonGrid({ data, error }: JsonGridProps) {
   }
   return (
     <div className="h-full  overflow-auto">
-      <JSONGrid className="font-mono" data={data} theme="defaultLight" />
+      <JSONGrid
+        className="font-mono"
+        data={data}
+        theme={theme === "dark" ? "moonLight" : "defaultLight"}
+      />
     </div>
   );
 }
