@@ -110,7 +110,6 @@ export function JsonVisualizer() {
               <span className="hidden sm:inline">
                 thatbeautifuldream/json-visualizer
               </span>
-              <span className="inline sm:hidden">{`{json-viz}`}</span>
             </Button>
             <ModeToggle />
           </div>
