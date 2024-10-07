@@ -4,10 +4,8 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import {
-  a11yDark,
-  a11yLight,
-} from "react-syntax-highlighter/dist/esm/styles/prism";
+import a11yDark from "react-syntax-highlighter/dist/esm/styles/prism";
+import a11yLight from "react-syntax-highlighter/dist/esm/styles/prism";
 import { json_explanation } from "@/lib/data";
 import { useTheme } from "next-themes";
 
