@@ -10,12 +10,13 @@ import { JsonGrid } from "./json-grid";
 import { JsonView } from "./json-view";
 import Loader from "./loader";
 import { ModeToggle } from "./mode-toggle";
+import { AIExplanation } from "@/components/ai-explanation";
 
 export function JsonVisualizer() {
   const [activeTab, setActiveTab] = useQueryState("tab", {
     defaultValue: "input",
     parse: (value) =>
-      ["input", "tree", "grid"].includes(value) ? value : "input",
+      ["input", "tree", "grid", "ai"].includes(value) ? value : "input",
   });
 
   const [jsonUrl] = useQueryState("json_url");
@@ -61,7 +62,7 @@ export function JsonVisualizer() {
       <Tabs
         value={activeTab}
         onValueChange={(value) =>
-          setActiveTab(value as "input" | "tree" | "grid")
+          setActiveTab(value as "input" | "tree" | "grid" | "ai")
         }
         className="flex-grow flex flex-col"
       >
@@ -91,6 +92,12 @@ export function JsonVisualizer() {
                 className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 dark:text-gray-300"
               >
                 Grid
+              </TabsTrigger>
+              <TabsTrigger
+                value="ai"
+                className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 dark:text-gray-300"
+              >
+                AI
               </TabsTrigger>
             </TabsList>
           </div>
@@ -133,6 +140,13 @@ export function JsonVisualizer() {
               <Loader />
             ) : (
               parsedJson && <JsonGrid data={parsedJson} error={error} />
+            )}
+          </TabsContent>
+          <TabsContent value="ai" className="flex-grow p-4">
+            {isLoading ? (
+              <Loader />
+            ) : (
+              parsedJson && <AIExplanation jsonData={parsedJson} />
             )}
           </TabsContent>
         </div>

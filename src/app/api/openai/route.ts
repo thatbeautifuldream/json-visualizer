@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
-import { z } from "zod";
 import { zodResponseFormat } from "openai/helpers/zod";
+import { z } from "zod";
 
 // Input schema
 const InputSchema = z.object({
@@ -10,14 +10,14 @@ const InputSchema = z.object({
 });
 
 // Output schema
-const ExplanationSchema = z.object({
+const ExplanationStep = z.object({
+  explanation: z.string(),
+  output: z.string(),
+});
+
+const JsonExplanationResponse = z.object({
+  steps: z.array(ExplanationStep),
   summary: z.string(),
-  structure: z.object({
-    type: z.string(),
-    properties: z.record(z.string()),
-  }),
-  keyComponents: z.array(z.string()),
-  potentialUse: z.string(),
 });
 
 export const POST = async (req: NextRequest) => {
@@ -29,30 +29,42 @@ export const POST = async (req: NextRequest) => {
       apiKey: apiKey || process.env.OPENAI_API_KEY,
     });
 
-    const response = await client.beta.chat.completions.parse({
+    const completion = await client.beta.chat.completions.parse({
+      model: "gpt-4o-2024-08-06",
       messages: [
         {
           role: "system",
           content:
-            "You are an AI assistant that explains JSON structures. Provide a detailed, structured explanation of the given JSON.",
+            "You are an AI assistant that explains JSON structures. Provide a detailed, step-by-step explanation of the given JSON.",
         },
         {
           role: "user",
           content: `Explain this JSON structure: ${JSON.stringify(json)}`,
         },
       ],
-      model: "gpt-4o",
       temperature: 0.7,
       max_tokens: 4096,
-      response_format: zodResponseFormat(ExplanationSchema, "explanation"),
+      response_format: zodResponseFormat(
+        JsonExplanationResponse,
+        "jsonExplanation"
+      ),
     });
 
-    const explanation = response.choices[0].message.parsed;
-
-    return NextResponse.json(
-      { status: true, data: explanation },
-      { status: 200 }
-    );
+    const message = completion.choices[0]?.message;
+    if (message?.parsed) {
+      return NextResponse.json(
+        { status: true, data: message.parsed },
+        { status: 200 }
+      );
+    } else {
+      return NextResponse.json(
+        {
+          status: false,
+          message: message?.refusal || "Failed to parse the response.",
+        },
+        { status: 500 }
+      );
+    }
   } catch (e) {
     console.error("The sample encountered an error:", e);
     if (e instanceof z.ZodError) {
