@@ -14,6 +14,7 @@ import {
 } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { useKeyStore } from "@/lib/stores/key-store";
 import { ApiKeyDialog } from "./api-key-dialog";
+import Loader from "./loader";
 
 interface JsonExplanationProps {
   jsonData: any;
@@ -47,11 +48,20 @@ export function JsonExplanation({ jsonData }: JsonExplanationProps) {
   }
 
   if (explainJsonMutation.isPending) {
-    return <div>Loading explanation...</div>;
+    return (
+      <div className="flex justify-center items-center h-full">
+        <Loader />
+      </div>
+    );
   }
 
   if (explainJsonMutation.isError) {
-    return <div>Error: {explainJsonMutation.error.message}</div>;
+    return (
+      <div className="flex flex-col items-center justify-center space-y-4">
+        <p>Error: {explainJsonMutation.error.message}</p>
+        <ApiKeyDialog />
+      </div>
+    );
   }
 
   if (explainJsonMutation.isSuccess) {

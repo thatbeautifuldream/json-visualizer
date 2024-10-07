@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,43 +20,63 @@ export function ApiKeyDialog() {
   const [inputKey, setInputKey] = useState("");
   const { setOpenAIKey, openAIKey } = useKeyStore();
 
+  useEffect(() => {
+    if (open && openAIKey) {
+      setInputKey("•".repeat(openAIKey.length));
+    } else {
+      setInputKey("");
+    }
+  }, [open, openAIKey]);
+
   const handleSave = () => {
-    setOpenAIKey(inputKey);
+    if (inputKey !== "•".repeat(openAIKey?.length)) {
+      setOpenAIKey(inputKey);
+    }
     setOpen(false);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value !== "•".repeat(value.length)) {
+      setInputKey(value);
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">
-          {openAIKey ? "Update API Key" : "Set API Key"}
+          {openAIKey ? "Update OpenAI API Key" : "Set OpenAI API Key"}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Set OpenAI API Key</DialogTitle>
+          <DialogTitle>OpenAI API Key Configuration</DialogTitle>
           <DialogDescription>
-            Enter your OpenAI API key to enable JSON explanations. We do not
-            store your key; it&apos;s only used to generate responses to help
-            you understand your JSONs better.
+            Enhance your JSON understanding with AI-powered explanations. Your
+            API key enables secure, on-demand insights without being stored on
+            our servers.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="api-key" className="text-right">
-              API Key
-            </Label>
+          <div className="flex flex-col space-y-2">
+            <Label htmlFor="api-key">OpenAI API Key</Label>
             <Input
               id="api-key"
               value={inputKey}
-              onChange={(e) => setInputKey(e.target.value)}
-              className="col-span-3"
+              onChange={handleInputChange}
               type="password"
+              placeholder={openAIKey ? "" : "Enter your OpenAI API key"}
             />
           </div>
+          <p className="text-sm text-muted-foreground">
+            Your API key is used solely for generating explanations and is never
+            stored or logged. Ensure you keep your key confidential and do not
+            share it with others.
+          </p>
         </div>
         <DialogFooter>
-          <Button onClick={handleSave}>Save changes</Button>
+          <Button onClick={handleSave}>Save API Key</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
