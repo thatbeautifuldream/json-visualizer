@@ -12,6 +12,8 @@ import {
   // @ts-expect-error : types are not correct
   a11yLight,
 } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { useKeyStore } from "@/lib/stores/key-store";
+import { ApiKeyDialog } from "./api-key-dialog";
 
 interface JsonExplanationProps {
   jsonData: any;
@@ -19,6 +21,7 @@ interface JsonExplanationProps {
 
 export function JsonExplanation({ jsonData }: JsonExplanationProps) {
   const { theme } = useTheme();
+  const { openAIKey } = useKeyStore();
 
   const explainJsonMutation = useMutation({
     mutationKey: ["explainJson"],
@@ -26,11 +29,22 @@ export function JsonExplanation({ jsonData }: JsonExplanationProps) {
   });
 
   useEffect(() => {
-    explainJsonMutation.mutate({
-      apiKey: "",
-      jsonData: jsonData,
-    });
-  }, []);
+    if (openAIKey) {
+      explainJsonMutation.mutate({
+        apiKey: openAIKey,
+        jsonData: jsonData,
+      });
+    }
+  }, [openAIKey, jsonData]);
+
+  if (!openAIKey) {
+    return (
+      <div className="flex flex-col items-center justify-center space-y-4">
+        <p>Please set your OpenAI API key to get JSON explanations.</p>
+        <ApiKeyDialog />
+      </div>
+    );
+  }
 
   if (explainJsonMutation.isPending) {
     return <div>Loading explanation...</div>;
@@ -43,6 +57,9 @@ export function JsonExplanation({ jsonData }: JsonExplanationProps) {
   if (explainJsonMutation.isSuccess) {
     return (
       <div className="space-y-4">
+        <div className="flex justify-end">
+          <ApiKeyDialog />
+        </div>
         <Card>
           <CardHeader>
             <CardTitle>Summary</CardTitle>
@@ -80,13 +97,11 @@ export function JsonExplanation({ jsonData }: JsonExplanationProps) {
   }
 }
 
-// Helper function to format JSON
+// Helper function to format JSON (unchanged)
 function formatJSON(jsonString: string): string {
   try {
-    // Attempt to parse and re-stringify to format
     return JSON.stringify(JSON.parse(jsonString), null, 2);
   } catch (error) {
-    // If parsing fails, return the original string
     console.warn("Failed to parse JSON:", error);
     return jsonString;
   }
