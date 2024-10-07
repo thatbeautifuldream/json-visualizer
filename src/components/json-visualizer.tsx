@@ -10,7 +10,7 @@ import { JsonGrid } from "./json-grid";
 import { JsonView } from "./json-view";
 import Loader from "./loader";
 import { ModeToggle } from "./mode-toggle";
-import { AIExplanation } from "@/components/ai-explanation";
+import { JsonExplanation } from "@/components/json-explanation";
 
 export function JsonVisualizer() {
   const [activeTab, setActiveTab] = useQueryState("tab", {
@@ -146,7 +146,7 @@ export function JsonVisualizer() {
             {isLoading ? (
               <Loader />
             ) : (
-              parsedJson && <AIExplanation jsonData={parsedJson} />
+              parsedJson && <JsonExplanation jsonData={parsedJson} />
             )}
           </TabsContent>
         </div>

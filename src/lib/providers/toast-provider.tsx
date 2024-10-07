@@ -3,7 +3,7 @@
 import { useTheme } from "next-themes";
 import { Toaster } from "sonner";
 
-export default function SonnerProvider({
+export default function ToastProvider({
   children,
 }: {
   children: React.ReactNode;
