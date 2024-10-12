@@ -11,19 +11,22 @@ import { JsonView } from "./json-view";
 import Loader from "./loader";
 import { ModeToggle } from "./mode-toggle";
 import { JsonExplanation } from "@/components/json-explanation";
-import { useTabStore, TabValue } from "@/lib/stores/tab-store";
+import {
+  useJsonVisualizerStore,
+  TabValue,
+} from "@/lib/stores/json-visualizer-store";
 
 export function JsonVisualizer() {
-  const activeTab = useTabStore.use.activeTab();
-  const jsonInput = useTabStore.use.jsonInput();
-  const parsedJson = useTabStore.use.parsedJson();
-  const error = useTabStore.use.error();
-  const isLoading = useTabStore.use.isLoading();
-  const setActiveTab = useTabStore.use.setActiveTab();
-  const setJsonInput = useTabStore.use.setJsonInput();
-  const setParsedJson = useTabStore.use.setParsedJson();
-  const setError = useTabStore.use.setError();
-  const setIsLoading = useTabStore.use.setIsLoading();
+  const activeTab = useJsonVisualizerStore.use.activeTab();
+  const jsonInput = useJsonVisualizerStore.use.jsonInput();
+  const parsedJson = useJsonVisualizerStore.use.parsedJson();
+  const error = useJsonVisualizerStore.use.error();
+  const isLoading = useJsonVisualizerStore.use.isLoading();
+  const setActiveTab = useJsonVisualizerStore.use.setActiveTab();
+  const setJsonInput = useJsonVisualizerStore.use.setJsonInput();
+  const setParsedJson = useJsonVisualizerStore.use.setParsedJson();
+  const setError = useJsonVisualizerStore.use.setError();
+  const setIsLoading = useJsonVisualizerStore.use.setIsLoading();
 
   const [url] = useQueryState("url");
 

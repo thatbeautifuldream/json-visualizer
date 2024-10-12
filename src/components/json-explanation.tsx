@@ -15,6 +15,7 @@ import {
 import { useKeyStore } from "@/lib/stores/key-store";
 import { ApiKeyDialog } from "./api-key-dialog";
 import Loader from "./loader";
+import { useJsonVisualizerStore } from "@/lib/stores/json-visualizer-store";
 
 interface JsonExplanationProps {
   jsonData: any;
@@ -23,6 +24,8 @@ interface JsonExplanationProps {
 export function JsonExplanation({ jsonData }: JsonExplanationProps) {
   const { theme } = useTheme();
   const { openAIKey } = useKeyStore();
+  const aiExplanation = useJsonVisualizerStore.use.aiExplanation();
+  const setAIExplanation = useJsonVisualizerStore.use.setAIExplanation();
 
   const explainJsonMutation = useMutation({
     mutationKey: ["explainJson"],
@@ -30,13 +33,19 @@ export function JsonExplanation({ jsonData }: JsonExplanationProps) {
   });
 
   useEffect(() => {
-    if (openAIKey) {
+    if (openAIKey && !aiExplanation) {
       explainJsonMutation.mutate({
         apiKey: openAIKey,
         jsonData: jsonData,
       });
     }
-  }, [openAIKey, jsonData]);
+  }, [openAIKey, jsonData, aiExplanation]);
+
+  useEffect(() => {
+    if (explainJsonMutation.isSuccess) {
+      setAIExplanation(explainJsonMutation?.data?.data);
+    }
+  }, [explainJsonMutation.isSuccess, setAIExplanation]);
 
   if (!openAIKey) {
     return (
@@ -47,7 +56,7 @@ export function JsonExplanation({ jsonData }: JsonExplanationProps) {
     );
   }
 
-  if (explainJsonMutation.isPending) {
+  if (explainJsonMutation.isPending && !aiExplanation) {
     return (
       <div className="flex justify-center items-center h-full">
         <Loader />
@@ -55,7 +64,7 @@ export function JsonExplanation({ jsonData }: JsonExplanationProps) {
     );
   }
 
-  if (explainJsonMutation.isError) {
+  if (explainJsonMutation.isError && !aiExplanation) {
     return (
       <div className="flex flex-col items-center justify-center space-y-4">
         <p>Error: {explainJsonMutation.error.message}</p>
@@ -64,7 +73,7 @@ export function JsonExplanation({ jsonData }: JsonExplanationProps) {
     );
   }
 
-  if (explainJsonMutation.isSuccess) {
+  if (aiExplanation) {
     return (
       <div className="space-y-4">
         <div className="flex justify-end">
@@ -74,7 +83,7 @@ export function JsonExplanation({ jsonData }: JsonExplanationProps) {
           <CardHeader>
             <CardTitle>Summary</CardTitle>
           </CardHeader>
-          <CardContent>{explainJsonMutation?.data?.data?.summary}</CardContent>
+          <CardContent>{aiExplanation.summary}</CardContent>
         </Card>
         <Card>
           <CardHeader>
@@ -82,7 +91,7 @@ export function JsonExplanation({ jsonData }: JsonExplanationProps) {
           </CardHeader>
           <CardContent>
             <ScrollArea className="h-[calc(100vh-320px)]">
-              {explainJsonMutation?.data?.data?.steps.map((step, index) => (
+              {aiExplanation.steps.map((step, index) => (
                 <div key={index} className="mb-6">
                   <p className="font-semibold mb-2">{step.explanation}</p>
                   <SyntaxHighlighter
