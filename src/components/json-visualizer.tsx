@@ -5,31 +5,32 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Braces, Github } from "lucide-react";
 import { useQueryState } from "nuqs";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { JsonGrid } from "./json-grid";
 import { JsonView } from "./json-view";
 import Loader from "./loader";
 import { ModeToggle } from "./mode-toggle";
 import { JsonExplanation } from "@/components/json-explanation";
+import { useTabStore, TabValue } from "@/lib/stores/tab-store";
 
 export function JsonVisualizer() {
-  const [activeTab, setActiveTab] = useQueryState("tab", {
-    defaultValue: "input",
-    parse: (value) =>
-      ["input", "tree", "grid", "ai"].includes(value) ? value : "input",
-  });
+  const activeTab = useTabStore.use.activeTab();
+  const jsonInput = useTabStore.use.jsonInput();
+  const parsedJson = useTabStore.use.parsedJson();
+  const error = useTabStore.use.error();
+  const isLoading = useTabStore.use.isLoading();
+  const setActiveTab = useTabStore.use.setActiveTab();
+  const setJsonInput = useTabStore.use.setJsonInput();
+  const setParsedJson = useTabStore.use.setParsedJson();
+  const setError = useTabStore.use.setError();
+  const setIsLoading = useTabStore.use.setIsLoading();
 
-  const [jsonUrl] = useQueryState("json_url");
-
-  const [jsonInput, setJsonInput] = useState("");
-  const [parsedJson, setParsedJson] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [url] = useQueryState("url");
 
   useEffect(() => {
-    if (jsonUrl) {
+    if (url) {
       setIsLoading(true);
-      fetch(jsonUrl)
+      fetch(url)
         .then((response) => response.text())
         .then((data) => {
           setJsonInput(data);
@@ -40,7 +41,7 @@ export function JsonVisualizer() {
           setIsLoading(false);
         });
     }
-  }, [jsonUrl]);
+  }, [url, setJsonInput, setError, setIsLoading]);
 
   useEffect(() => {
     try {
@@ -51,7 +52,7 @@ export function JsonVisualizer() {
       setError("Invalid JSON: " + (err as Error).message);
       setParsedJson(null);
     }
-  }, [jsonInput]);
+  }, [jsonInput, setParsedJson, setError]);
 
   const handleJsonInputChange = (value: string) => {
     setJsonInput(value);
@@ -61,9 +62,7 @@ export function JsonVisualizer() {
     <div className="h-screen flex flex-col font-inter">
       <Tabs
         value={activeTab}
-        onValueChange={(value) =>
-          setActiveTab(value as "input" | "tree" | "grid" | "ai")
-        }
+        onValueChange={(value) => setActiveTab(value as TabValue)}
         className="flex-grow flex flex-col"
       >
         <div className="bg-gray-100 dark:bg-black px-4 py-2 flex items-center justify-between shadow-sm">
