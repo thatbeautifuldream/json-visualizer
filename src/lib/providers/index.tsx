@@ -7,8 +7,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <QueryProvider>
       <ThemeProvider
         attribute="class"
-        defaultTheme="system"
-        enableSystem
+        defaultTheme="dark"
         disableTransitionOnChange
       >
         <ToastProvider>{children}</ToastProvider>
