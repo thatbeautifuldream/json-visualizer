@@ -76,11 +76,11 @@ export function JsonExplanation({ jsonData }: JsonExplanationProps) {
   if (aiExplanation) {
     return (
       <div className="space-y-4">
-        <div className="flex justify-end">
-          <ApiKeyDialog />
-        </div>
         <Card>
-          <CardHeader>
+          <CardHeader className="relative">
+            <div className="absolute top-2 right-4">
+              <ApiKeyDialog />
+            </div>
             <CardTitle>Summary</CardTitle>
           </CardHeader>
           <CardContent>{aiExplanation.summary}</CardContent>
