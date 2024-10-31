@@ -1,11 +1,11 @@
-import { prisma } from "@/lib/prisma";
+import { db } from "@/server/db";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
     const { json } = await req.json();
 
-    const jsonShare = await prisma.jsonShare.create({
+    const jsonShare = await db.jsonShare.create({
       data: {
         json,
         expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
@@ -30,7 +30,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
     }
 
-    const jsonShare = await prisma.jsonShare.findUnique({
+    const jsonShare = await db.jsonShare.findUnique({
       where: { id },
     });
 
