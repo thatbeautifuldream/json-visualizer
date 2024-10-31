@@ -1,7 +1,7 @@
 import { db } from "@/server/db";
 import { NextResponse } from "next/server";
 
-const THIRTY_DAYS = 1000 * 60 * 60 * 24 * 30;
+const THIRTY_DAYS = 1000 * 60 * 60 * 24 * 30; // 1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 30 days
 
 export async function POST(req: Request) {
   try {
@@ -81,7 +81,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "JSON not found" }, { status: 404 });
     }
 
-    if (jsonShare.expiresAt < new Date()) {
+    if (jsonShare?.expiresAt && jsonShare.expiresAt < new Date()) {
       return NextResponse.json({ error: "JSON has expired" }, { status: 410 });
     }
 
