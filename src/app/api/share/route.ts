@@ -8,14 +8,18 @@ export async function POST(req: Request) {
     const jsonShare = await db.jsonShare.create({
       data: {
         json,
-        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
+        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
       },
     });
 
     return NextResponse.json({ id: jsonShare.id });
-  } catch {
+  } catch (error) {
+    console.error("Database error:", error);
     return NextResponse.json(
-      { error: "Failed to share JSON" },
+      {
+        error: "Failed to share JSON",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 }
     );
   }
@@ -39,9 +43,13 @@ export async function GET(req: Request) {
     }
 
     return NextResponse.json({ json: jsonShare.json });
-  } catch {
+  } catch (error) {
+    console.error("Database error:", error);
     return NextResponse.json(
-      { error: "Failed to fetch JSON" },
+      {
+        error: "Failed to fetch JSON",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 }
     );
   }
