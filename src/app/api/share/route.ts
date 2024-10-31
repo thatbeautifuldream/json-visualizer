@@ -29,7 +29,33 @@ export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
     const id = url.searchParams.get("id");
+    const all = url.searchParams.get("all");
 
+    // Handle fetch all JSONs
+    if (all === "true") {
+      const page = parseInt(url.searchParams.get("page") ?? "1");
+      const pageSize = 10;
+
+      const allJsonShares = await db.jsonShare.findMany({
+        orderBy: { createdAt: "desc" },
+        take: pageSize,
+        skip: (page - 1) * pageSize,
+      });
+
+      const total = await db.jsonShare.count();
+
+      return NextResponse.json({
+        shares: allJsonShares,
+        pagination: {
+          total,
+          pageSize,
+          currentPage: page,
+          totalPages: Math.ceil(total / pageSize),
+        },
+      });
+    }
+
+    // Single JSON fetch logic
     if (!id) {
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
     }
