@@ -1,18 +1,18 @@
 "use client";
 
-import { JsonInput } from "@/components/json-input";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Braces, Github } from "lucide-react";
-import { useEffect } from "react";
+import { JsonExplanation } from "@/components/json-explanation";
 import { JsonGrid } from "@/components/json-grid";
+import { JsonInput } from "@/components/json-input";
 import { JsonView } from "@/components/json-view";
 import { ModeToggle } from "@/components/mode-toggle";
-import { JsonExplanation } from "@/components/json-explanation";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  useJsonVisualizerStore,
   TabValue,
+  useJsonVisualizerStore,
 } from "@/lib/stores/json-visualizer-store";
+import { Braces, Github } from "lucide-react";
+import { useEffect } from "react";
 
 export default function JsonVisualizer() {
   const {
