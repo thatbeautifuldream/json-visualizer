@@ -1,20 +1,35 @@
 import { db } from "@/server/db";
 import { NextResponse } from "next/server";
 
-const THIRTY_DAYS = 1000 * 60 * 60 * 24 * 30; // 1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 30 days
+const THIRTY_DAYS = 1000 * 60 * 60 * 24 * 30;
 
 export async function POST(req: Request) {
   try {
-    const { json } = await req.json();
+    const { json, title } = await req.json();
 
-    const jsonShare = await db.jsonShare.create({
+    // Calculate the size of the JSON string
+    const jsonString = JSON.stringify(json);
+    const size = new Blob([jsonString]).size;
+
+    // Validate JSON
+    let isValid = true;
+    try {
+      JSON.parse(jsonString);
+    } catch {
+      isValid = false;
+    }
+
+    const jsonDocument = await db.jsonDocument.create({
       data: {
-        json,
+        title: title ?? "Untitled",
+        content: jsonString,
+        size,
+        isValid,
         expiresAt: new Date(Date.now() + THIRTY_DAYS),
       },
     });
 
-    return NextResponse.json({ id: jsonShare.id });
+    return NextResponse.json({ id: jsonDocument.id });
   } catch (error) {
     console.error("Database error:", error);
     return NextResponse.json(
@@ -33,23 +48,31 @@ export async function GET(req: Request) {
     const id = url.searchParams.get("id");
     const all = url.searchParams.get("all");
 
-    // Handle fetch all JSONs
     if (all === "true") {
       const page = parseInt(url.searchParams.get("page") ?? "1");
       const pageSize = 10;
 
-      const allJsonShares = await db.jsonShare.findMany({
+      const allDocuments = await db.jsonDocument.findMany({
         where: {
           expiresAt: {
-            gt: new Date(), // Only fetch non-expired records
+            gt: new Date(),
           },
         },
         orderBy: { createdAt: "desc" },
         take: pageSize,
         skip: (page - 1) * pageSize,
+        select: {
+          id: true,
+          title: true,
+          size: true,
+          viewCount: true,
+          createdAt: true,
+          expiresAt: true,
+          isValid: true,
+        },
       });
 
-      const total = await db.jsonShare.count({
+      const total = await db.jsonDocument.count({
         where: {
           expiresAt: {
             gt: new Date(),
@@ -58,7 +81,7 @@ export async function GET(req: Request) {
       });
 
       return NextResponse.json({
-        shares: allJsonShares,
+        documents: allDocuments,
         pagination: {
           total,
           pageSize,
@@ -68,24 +91,44 @@ export async function GET(req: Request) {
       });
     }
 
-    // Single JSON fetch logic
     if (!id) {
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
     }
 
-    const jsonShare = await db.jsonShare.findUnique({
+    const document = await db.jsonDocument.update({
       where: { id },
+      data: {
+        viewCount: {
+          increment: 1,
+        },
+      },
+      select: {
+        content: true,
+        title: true,
+        viewCount: true,
+        expiresAt: true,
+        isValid: true,
+        size: true,
+      },
     });
 
-    if (!jsonShare) {
+    if (!document) {
       return NextResponse.json({ error: "JSON not found" }, { status: 404 });
     }
 
-    if (jsonShare?.expiresAt && jsonShare.expiresAt < new Date()) {
+    if (document.expiresAt && document.expiresAt < new Date()) {
       return NextResponse.json({ error: "JSON has expired" }, { status: 410 });
     }
 
-    return NextResponse.json({ json: jsonShare.json });
+    return NextResponse.json({
+      json: JSON.parse(document.content),
+      metadata: {
+        title: document.title,
+        viewCount: document.viewCount,
+        size: document.size,
+        isValid: document.isValid,
+      },
+    });
   } catch (error) {
     console.error("Database error:", error);
     return NextResponse.json(
@@ -100,7 +143,7 @@ export async function GET(req: Request) {
 
 export async function DELETE() {
   try {
-    const deleted = await db.jsonShare.deleteMany({
+    const deleted = await db.jsonDocument.deleteMany({
       where: {
         expiresAt: {
           lt: new Date(),

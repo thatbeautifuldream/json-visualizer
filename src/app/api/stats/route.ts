@@ -3,33 +3,56 @@ import { db } from "@/server/db";
 
 export async function GET() {
   try {
-    const totalJsons = await db.jsonShare.count();
+    const stats = await db.$transaction(async (tx) => {
+      // Get total documents count
+      const totalDocs = await tx.jsonDocument.count();
 
-    const lastWeekJsons = await db.jsonShare.count({
-      where: {
-        createdAt: {
-          gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+      // Get documents created in last 24 hours
+      const last24Hours = await tx.jsonDocument.count({
+        where: {
+          createdAt: {
+            gte: new Date(Date.now() - 24 * 60 * 60 * 1000),
+          },
         },
-      },
+      });
+
+      // Get total views
+      const viewsResult = await tx.jsonDocument.aggregate({
+        _sum: {
+          viewCount: true,
+        },
+      });
+
+      // Get average document size
+      const sizeResult = await tx.jsonDocument.aggregate({
+        _avg: {
+          size: true,
+        },
+      });
+
+      // Get expired documents count
+      const expiredDocs = await tx.jsonDocument.count({
+        where: {
+          expiresAt: {
+            lt: new Date(),
+          },
+        },
+      });
+
+      return {
+        totalDocuments: totalDocs,
+        documentsLast24h: last24Hours,
+        totalViews: viewsResult._sum.viewCount ?? 0,
+        averageSize: Math.round(sizeResult._avg.size ?? 0),
+        expiredDocuments: expiredDocs,
+      };
     });
 
-    return NextResponse.json(
-      {
-        success: true,
-        data: {
-          totalJsons,
-          lastWeekJsons,
-        },
-      },
-      { status: 200 }
-    );
+    return NextResponse.json(stats, { status: 200 });
   } catch (error) {
-    console.error("Stats error:", error);
+    console.error("Stats API Error:", error);
     return NextResponse.json(
-      {
-        success: false,
-        error: "Failed to fetch stats",
-      },
+      { error: "Failed to fetch statistics" },
       { status: 500 }
     );
   }
