@@ -4,11 +4,9 @@ import { JsonInput } from "@/components/json-input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Braces, Github } from "lucide-react";
-import { useQueryState } from "nuqs";
 import { useEffect } from "react";
 import { JsonGrid } from "@/components/json-grid";
 import { JsonView } from "@/components/json-view";
-import Loader from "@/components/loader";
 import { ModeToggle } from "@/components/mode-toggle";
 import { JsonExplanation } from "@/components/json-explanation";
 import {
@@ -16,37 +14,17 @@ import {
   TabValue,
 } from "@/lib/stores/json-visualizer-store";
 
-export function JsonVisualizer() {
+export default function JsonVisualizer() {
   const {
     activeTab,
     jsonInput,
     parsedJson,
     error,
-    isLoading,
     setActiveTab,
     setJsonInput,
     setParsedJson,
     setError,
-    setIsLoading,
   } = useJsonVisualizerStore();
-
-  const [url] = useQueryState("url");
-
-  useEffect(() => {
-    if (url) {
-      setIsLoading(true);
-      fetch(url)
-        .then((response) => response.text())
-        .then((data) => {
-          setJsonInput(data);
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          setError("Failed to fetch JSON: " + err.message);
-          setIsLoading(false);
-        });
-    }
-  }, [url, setJsonInput, setError, setIsLoading]);
 
   useEffect(() => {
     try {
@@ -133,25 +111,13 @@ export function JsonVisualizer() {
             />
           </TabsContent>
           <TabsContent value="tree" className="flex-grow p-4">
-            {isLoading ? (
-              <Loader />
-            ) : (
-              parsedJson && <JsonView parsedJson={parsedJson} error={error} />
-            )}
+            {parsedJson && <JsonView parsedJson={parsedJson} error={error} />}
           </TabsContent>
           <TabsContent value="grid" className="flex-grow p-4">
-            {isLoading ? (
-              <Loader />
-            ) : (
-              parsedJson && <JsonGrid data={parsedJson} error={error} />
-            )}
+            {parsedJson && <JsonGrid data={parsedJson} error={error} />}
           </TabsContent>
           <TabsContent value="ai" className="flex-grow p-4">
-            {isLoading ? (
-              <Loader />
-            ) : (
-              parsedJson && <JsonExplanation jsonData={parsedJson} />
-            )}
+            {parsedJson && <JsonExplanation jsonData={parsedJson} />}
           </TabsContent>
         </div>
       </Tabs>

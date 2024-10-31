@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Clipboard, Copy, FileJson, Trash, X } from "lucide-react";
 import { toast } from "sonner";
-import { LoadJsonModal } from "./load-json-modal";
 
 interface JsonInputProps {
   jsonInput: string;
@@ -83,7 +82,6 @@ export function JsonInput({ jsonInput, setJsonInput }: JsonInputProps) {
           <Trash className="w-4 h-4 mr-2" />
           Clear
         </Button>
-        <LoadJsonModal onJsonLoaded={setJsonInput} />
       </div>
       <Textarea
         value={jsonInput}
