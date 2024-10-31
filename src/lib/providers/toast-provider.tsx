@@ -13,7 +13,7 @@ export default function ToastProvider({
     <>
       <Toaster
         richColors
-        position="bottom-right"
+        position="top-center"
         theme={theme === "dark" ? "dark" : "light"}
       />
       {children}

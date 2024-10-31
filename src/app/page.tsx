@@ -12,9 +12,14 @@ import {
   useJsonVisualizerStore,
 } from "@/lib/stores/json-visualizer-store";
 import { Braces, Github } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 export default function JsonVisualizer() {
+  const searchParams = useSearchParams();
+  const shareId = searchParams.get("id");
+
   const {
     activeTab,
     jsonInput,
@@ -37,8 +42,44 @@ export default function JsonVisualizer() {
     }
   }, [jsonInput, setParsedJson, setError]);
 
+  useEffect(() => {
+    if (shareId) {
+      fetch(`/api/share?id=${shareId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.json) {
+            setJsonInput(data.json);
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to fetch shared JSON:", error);
+        });
+    }
+  }, [shareId, setJsonInput]);
+
   const handleJsonInputChange = (value: string) => {
     setJsonInput(value);
+  };
+
+  const handleShare = async () => {
+    try {
+      const response = await fetch("/api/share", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ json: jsonInput }),
+      });
+
+      const data = await response.json();
+      if (data.id) {
+        const shareUrl = `${window.location.origin}?id=${data.id}`;
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success(`Copied share URL to clipboard: ${shareUrl}`);
+      }
+    } catch (error) {
+      console.error("Failed to share JSON:", error);
+    }
   };
 
   return (
@@ -84,6 +125,14 @@ export default function JsonVisualizer() {
             </TabsList>
           </div>
           <div className="flex items-center space-x-4">
+            <Button
+              variant="ghost"
+              size="xs"
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800"
+              onClick={handleShare}
+            >
+              Share
+            </Button>
             <Button
               variant="ghost"
               size="xs"
