@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Share2 } from "lucide-react";
 
 interface ShareDialogProps {
   jsonInput: string;
@@ -94,10 +95,11 @@ export function ShareDialog({ jsonInput }: ShareDialogProps) {
       <DialogTrigger asChild>
         <Button
           variant="ghost"
-          size="xs"
+          size="icon"
           className="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800"
         >
-          Share
+          <Share2 className="h-4 w-4" />
+          <span className="sr-only">Share JSON</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
