@@ -1,18 +1,18 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
 import {
   Pagination,
   PaginationContent,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { Eye, FileJson } from "lucide-react";
 import Link from "next/link";
-import { Skeleton } from "./ui/skeleton";
+import { useRouter } from "next/navigation";
 import { Card } from "./ui/card";
+import { Skeleton } from "./ui/skeleton";
 
 interface Document {
   id: string;
@@ -37,14 +37,11 @@ async function fetchDocuments(page: number) {
   return res.json();
 }
 
-export function ExploreGrid() {
-  const searchParams = useSearchParams();
+export function ExploreGrid({ page }: { page: number }) {
   const router = useRouter();
-  const currentPage = Number(searchParams.get("page")) || 1;
-
   const { data, isLoading } = useQuery({
-    queryKey: ["explore", currentPage],
-    queryFn: () => fetchDocuments(currentPage),
+    queryKey: ["explore", page],
+    queryFn: () => fetchDocuments(page),
   });
 
   const documents: Document[] = data?.documents ?? [];
@@ -90,15 +87,15 @@ export function ExploreGrid() {
         <Pagination>
           <PaginationContent>
             <PaginationPrevious
-              onClick={() => handlePageChange(currentPage - 1)}
-              isActive={currentPage > 1}
+              onClick={() => handlePageChange(page - 1)}
+              isActive={page > 1}
             />
             <div className="text-sm">
-              Page {currentPage} of {pagination.totalPages}
+              Page {page} of {pagination.totalPages}
             </div>
             <PaginationNext
-              onClick={() => handlePageChange(currentPage + 1)}
-              isActive={currentPage < pagination.totalPages}
+              onClick={() => handlePageChange(page + 1)}
+              isActive={page < pagination.totalPages}
             />
           </PaginationContent>
         </Pagination>

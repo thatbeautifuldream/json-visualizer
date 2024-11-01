@@ -130,11 +130,8 @@ export function SharedJsonViewer({ id }: SharedJsonViewerProps) {
           )}
           <span className="sr-only">Copy JSON</span>
         </Button>
-        <ScrollArea
-          className="w-full rounded-md border"
-          style={{ height: viewerHeight }}
-        >
-          <pre className="rounded-lg overflow-auto">
+        <ScrollArea className="w-full border" style={{ height: viewerHeight }}>
+          <pre className="overflow-auto">
             <code className="language-json text-sm font-mono whitespace-pre p-4">
               {formatJson(data.json)}
             </code>

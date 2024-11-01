@@ -1,9 +1,9 @@
 import Providers from "@/lib/providers";
 import type { Metadata } from "next";
-import { Nunito } from "next/font/google";
+import { Raleway } from "next/font/google";
 import "./globals.css";
 
-const nunito = Nunito({ subsets: ["latin"] });
+const raleway = Raleway({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "JSON Visualizer",
@@ -16,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={nunito.className}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={raleway.className} suppressHydrationWarning>
         <Providers>{children}</Providers>
       </body>
     </html>
