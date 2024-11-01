@@ -1,11 +1,15 @@
-import { JsonVisualizer } from "@/components/json-visualizer";
+import { SharedJsonViewer } from "@/components/shared-json-viewer";
 
-interface SharedPageProps {
+interface SharedJsonPageProps {
   params: {
     id: string;
   };
 }
 
-export default function SharedJsonPage({ params }: SharedPageProps) {
-  return <JsonVisualizer initialShareId={params.id} />;
+export default function SharedJsonPage({ params }: SharedJsonPageProps) {
+  return (
+    <div className="container mx-auto py-8">
+      <SharedJsonViewer id={params.id} />
+    </div>
+  );
 }

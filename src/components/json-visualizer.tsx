@@ -14,7 +14,7 @@ import {
 import { Braces, Github } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
-import { toast } from "sonner";
+import { ShareDialog } from "@/components/share-dialog";
 
 interface JsonVisualizerProps {
   initialShareId?: string;
@@ -60,27 +60,6 @@ export function JsonVisualizer({ initialShareId }: JsonVisualizerProps) {
 
   const handleJsonInputChange = (value: string) => {
     setJsonInput(value);
-  };
-
-  const handleShare = async () => {
-    try {
-      const response = await fetch("/api/share", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ json: jsonInput }),
-      });
-
-      const data = await response.json();
-      if (data.id) {
-        const shareUrl = `${window.location.origin}/s/${data.id}`;
-        await navigator.clipboard.writeText(shareUrl);
-        toast.success(`Copied share URL to clipboard: ${shareUrl}`);
-      }
-    } catch (error) {
-      console.error("Failed to share JSON:", error);
-    }
   };
 
   return (
@@ -129,14 +108,7 @@ export function JsonVisualizer({ initialShareId }: JsonVisualizerProps) {
             </TabsList>
           </div>
           <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="xs"
-              className="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800"
-              onClick={handleShare}
-            >
-              Share
-            </Button>
+            <ShareDialog jsonInput={jsonInput} />
             <Button
               variant="ghost"
               size="xs"

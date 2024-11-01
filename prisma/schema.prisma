@@ -7,9 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model JsonShare {
-  id        String   @id @default(cuid())
-  json      String   @db.Text
-  createdAt DateTime @default(now())
-  expiresAt DateTime?
-} 
+model JsonDocument {
+  id          String    @id @default(cuid())
+  title       String?   @db.VarChar(255)
+  content     String    @db.Text
+  
+  // Metadata
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime?
+  
+  // Analytics
+  viewCount   Int       @default(0)
+  
+  // JSON metadata
+  size        Int       // Size in bytes
+  isValid     Boolean   @default(true)
+}
