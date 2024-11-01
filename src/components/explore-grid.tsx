@@ -1,25 +1,18 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
-import { Button } from "./ui/button";
-import { Skeleton } from "./ui/skeleton";
-import { formatDistanceToNow } from "date-fns";
-import { FileJson, Eye } from "lucide-react";
-import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Pagination,
   PaginationContent,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { formatDistanceToNow } from "date-fns";
+import { Eye, FileJson } from "lucide-react";
+import Link from "next/link";
+import { Skeleton } from "./ui/skeleton";
+import { Card } from "./ui/card";
 
 interface Document {
   id: string;
@@ -67,32 +60,29 @@ export function ExploreGrid() {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {documents.map((doc) => (
-          <Card key={doc.id}>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileJson className="h-5 w-5" />
-                <span className="truncate">{doc.title || "Untitled"}</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Eye className="h-4 w-4" />
-                <span>{doc.viewCount} views</span>
+          <Link href={`/s/${doc.id}`} key={doc.id}>
+            <Card className="hover:bg-accent transition-colors">
+              <div className="p-4 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <FileJson className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                    <span className="truncate font-medium text-sm">
+                      {doc.title || "Untitled"}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Eye className="h-3 w-3" />
+                    <span>{doc.viewCount}</span>
+                  </div>
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {formatDistanceToNow(new Date(doc.createdAt))} ago
+                </div>
               </div>
-              <div className="text-sm text-muted-foreground mt-2">
-                Shared {formatDistanceToNow(new Date(doc.createdAt))} ago
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Link href={`/s/${doc.id}`} className="w-full">
-                <Button variant="secondary" className="w-full">
-                  View JSON
-                </Button>
-              </Link>
-            </CardFooter>
-          </Card>
+            </Card>
+          </Link>
         ))}
       </div>
 
@@ -119,19 +109,14 @@ export function ExploreGrid() {
 
 function LoadingSkeleton() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
       {[...Array(6)].map((_, i) => (
-        <Card key={i}>
-          <CardHeader>
-            <Skeleton className="h-6 w-3/4" />
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <Skeleton className="h-4 w-1/4" />
-            <Skeleton className="h-4 w-1/2" />
-          </CardContent>
-          <CardFooter>
-            <Skeleton className="h-10 w-full" />
-          </CardFooter>
+        <Card key={i} className="p-4 space-y-2">
+          <div className="flex items-center justify-between">
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-4 w-8" />
+          </div>
+          <Skeleton className="h-3 w-1/3" />
         </Card>
       ))}
     </div>
