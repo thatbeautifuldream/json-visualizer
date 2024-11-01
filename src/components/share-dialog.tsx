@@ -13,12 +13,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface ShareDialogProps {
   jsonInput: string;
 }
 
 export function ShareDialog({ jsonInput }: ShareDialogProps) {
+  const router = useRouter();
   const [title, setTitle] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
@@ -64,10 +66,17 @@ export function ShareDialog({ jsonInput }: ShareDialogProps) {
       const data = await response.json();
       if (data.id) {
         const shareUrl = `${window.location.origin}/s/${data.id}`;
-        await navigator.clipboard.writeText(shareUrl);
-        toast.success("JSON shared successfully!", {
-          description: "Share URL copied to clipboard",
-        });
+        try {
+          await navigator.clipboard.writeText(shareUrl);
+          toast.success("JSON shared successfully!", {
+            description: "Share URL copied to clipboard",
+          });
+        } catch {
+          toast.success("JSON shared successfully!", {
+            description: "Redirecting to shared URL...",
+          });
+          router.push(shareUrl);
+        }
         setIsOpen(false);
         setTitle("");
       }
