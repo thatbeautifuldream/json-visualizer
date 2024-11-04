@@ -15,6 +15,8 @@ import { Braces, Github } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
 import { ShareDialog } from "@/components/share-dialog";
+import { fetchSharedJson } from "@/lib/services/share";
+import { useQuery } from "@tanstack/react-query";
 
 interface JsonVisualizerProps {
   initialShareId?: string;
@@ -43,20 +45,11 @@ export function JsonVisualizer({ initialShareId }: JsonVisualizerProps) {
     }
   }, [jsonInput, setParsedJson, setError]);
 
-  useEffect(() => {
-    if (initialShareId) {
-      fetch(`/api/share?id=${initialShareId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.json) {
-            setJsonInput(data.json);
-          }
-        })
-        .catch((error) => {
-          console.error("Failed to fetch shared JSON:", error);
-        });
-    }
-  }, [initialShareId, setJsonInput]);
+  const { data, isLoading } = useQuery({
+    enabled: !!initialShareId,
+    queryKey: ["sharedJson", initialShareId],
+    queryFn: () => fetchSharedJson(initialShareId || ""),
+  });
 
   const handleJsonInputChange = (value: string) => {
     setJsonInput(value);
@@ -108,7 +101,7 @@ export function JsonVisualizer({ initialShareId }: JsonVisualizerProps) {
             </TabsList>
           </div>
           <div className="flex items-center space-x-4">
-            <ShareDialog jsonInput={jsonInput} />
+            {!initialShareId && <ShareDialog jsonInput={jsonInput} />}
             <Button
               variant="ghost"
               size="xs"
@@ -130,10 +123,21 @@ export function JsonVisualizer({ initialShareId }: JsonVisualizerProps) {
         </div>
         <div className="flex-grow flex flex-col">
           <TabsContent value="input" className="flex-grow p-4">
-            <JsonInput
-              jsonInput={jsonInput}
-              setJsonInput={handleJsonInputChange}
-            />
+            {data ? (
+              <JsonInput
+                jsonInput={jsonInput}
+                setJsonInput={handleJsonInputChange}
+                isSharedJson={!!initialShareId}
+                sharedJsonMetadata={data.metadata}
+                isSharedJsonLoading={isLoading}
+              />
+            ) : (
+              <JsonInput
+                jsonInput={jsonInput}
+                setJsonInput={handleJsonInputChange}
+                isSharedJson={false}
+              />
+            )}
           </TabsContent>
           <TabsContent value="tree" className="flex-grow p-4">
             {parsedJson && <JsonView parsedJson={parsedJson} error={error} />}

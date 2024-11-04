@@ -1,4 +1,4 @@
-import { SharedJsonViewer } from "@/components/shared-json-viewer";
+import { JsonVisualizer } from "@/components/json-visualizer";
 
 interface SharedJsonPageProps {
   params: Promise<{
@@ -8,9 +8,5 @@ interface SharedJsonPageProps {
 
 export default async function SharedJsonPage({ params }: SharedJsonPageProps) {
   const jsonId = (await params).id;
-  return (
-    <div className="container mx-auto py-8">
-      {jsonId && <SharedJsonViewer id={jsonId} />}
-    </div>
-  );
+  return <div>{jsonId && <JsonVisualizer initialShareId={jsonId} />}</div>;
 }
