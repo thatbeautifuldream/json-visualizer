@@ -141,25 +141,28 @@ export async function GET(req: Request) {
   }
 }
 
-export async function DELETE() {
+export async function DELETE(req: Request) {
   try {
-    const deleted = await db.jsonDocument.deleteMany({
-      where: {
-        expiresAt: {
-          lt: new Date(),
-        },
-      },
+    const url = new URL(req.url);
+    const id = url.searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ error: "ID is required" }, { status: 400 });
+    }
+
+    const deleted = await db.jsonDocument.delete({
+      where: { id },
     });
 
     return NextResponse.json({
-      message: "Cleanup completed",
-      deletedCount: deleted.count,
+      message: "Document deleted successfully",
+      id: deleted.id,
     });
   } catch (error) {
-    console.error("Cleanup error:", error);
+    console.error("Delete error:", error);
     return NextResponse.json(
       {
-        error: "Failed to cleanup expired records",
+        error: "Failed to delete document",
         details: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }
