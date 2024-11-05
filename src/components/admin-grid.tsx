@@ -101,14 +101,22 @@ export function AdminGrid({ page }: { page: number }) {
         <Pagination>
           <PaginationContent>
             <PaginationPrevious
-              onClick={() => handlePageChange(page - 1)}
-              isActive={page > 1}
+              onClick={() => {
+                if (page >= 2) {
+                  handlePageChange(page - 1);
+                }
+              }}
+              isActive={page >= 2}
             />
             <div className="text-sm">
               Page {page} of {pagination?.totalPages}
             </div>
             <PaginationNext
-              onClick={() => handlePageChange(page + 1)}
+              onClick={() => {
+                if (page < (pagination?.totalPages ?? 0)) {
+                  handlePageChange(page + 1);
+                }
+              }}
               isActive={page < (pagination?.totalPages ?? 0)}
             />
           </PaginationContent>
