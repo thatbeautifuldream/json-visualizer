@@ -1,3 +1,4 @@
+import { env } from "@/env";
 import { db } from "@/server/db";
 import { NextResponse } from "next/server";
 
@@ -145,9 +146,17 @@ export async function DELETE(req: Request) {
   try {
     const url = new URL(req.url);
     const id = url.searchParams.get("id");
+    const adminKey = url.searchParams.get("adminKey");
 
     if (!id) {
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
+    }
+
+    if (!adminKey || adminKey !== env.ADMIN_KEY) {
+      return NextResponse.json(
+        { error: "Unauthorized: Invalid admin key" },
+        { status: 401 }
+      );
     }
 
     const deleted = await db.jsonDocument.delete({
