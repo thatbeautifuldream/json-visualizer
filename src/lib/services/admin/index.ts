@@ -30,10 +30,9 @@ type DeleteDocumentResponse = {
 };
 
 export async function deleteDocument(
-  id: string,
-  adminKey: string
+  id: string
 ): Promise<DeleteDocumentResponse> {
-  const res = await fetch(`/api/share?id=${id}&adminKey=${adminKey}`, {
+  const res = await fetch(`/api/share?id=${id}`, {
     method: "DELETE",
   });
   if (!res.ok) throw new Error("Failed to delete document");

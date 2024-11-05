@@ -1,6 +1,7 @@
 import { env } from "@/env";
 import { db } from "@/server/db";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 const THIRTY_DAYS = 1000 * 60 * 60 * 24 * 30;
 
@@ -146,7 +147,8 @@ export async function DELETE(req: Request) {
   try {
     const url = new URL(req.url);
     const id = url.searchParams.get("id");
-    const adminKey = url.searchParams.get("adminKey");
+    const cookieStore = await cookies();
+    const adminKey = cookieStore.get("ADMIN_KEY")?.value;
 
     if (!id) {
       return NextResponse.json({ error: "ID is required" }, { status: 400 });

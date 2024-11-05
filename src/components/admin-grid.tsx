@@ -23,13 +23,7 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 
-export function AdminGrid({
-  page,
-  adminKey,
-}: {
-  page: number;
-  adminKey?: string;
-}) {
+export function AdminGrid({ page }: { page: number }) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { data, isLoading } = useQuery({
@@ -44,15 +38,10 @@ export function AdminGrid({
     router.push(`/admin?page=${page}`);
   }
 
-  async function handleDelete(
-    e: React.MouseEvent,
-    id: string,
-    title: string,
-    adminKey: string
-  ) {
+  async function handleDelete(e: React.MouseEvent, id: string, title: string) {
     e.preventDefault(); // Prevent navigation
     try {
-      await deleteDocument(id, adminKey);
+      await deleteDocument(id);
       await queryClient.invalidateQueries({ queryKey: ["admin-explore"] });
       toast.success(`Deleted "${title || "Untitled"}" successfully`);
     } catch {
@@ -80,9 +69,7 @@ export function AdminGrid({
                             variant="secondary"
                             size="icon"
                             className="h-8 w-8 rounded-full shadow-sm hover:bg-destructive hover:text-destructive-foreground transition-colors"
-                            onClick={(e) =>
-                              handleDelete(e, doc.id, doc.title, adminKey ?? "")
-                            }
+                            onClick={(e) => handleDelete(e, doc.id, doc.title)}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>

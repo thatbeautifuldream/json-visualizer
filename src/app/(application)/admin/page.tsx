@@ -20,7 +20,7 @@ export default async function AdminPage({
   const page = (await params).page ?? 1;
   return (
     <div className="container mx-auto py-8">
-      <AdminGrid page={page} adminKey={adminKey ?? ""} />
+      <AdminGrid page={page} />
     </div>
   );
 }
