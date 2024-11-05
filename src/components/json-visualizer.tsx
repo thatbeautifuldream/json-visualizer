@@ -100,7 +100,7 @@ export function JsonVisualizer({ initialShareId }: JsonVisualizerProps) {
               </TabsTrigger>
             </TabsList>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-0">
             {!initialShareId && <ShareDialog jsonInput={jsonInput} />}
             <Button
               variant="ghost"
@@ -114,9 +114,7 @@ export function JsonVisualizer({ initialShareId }: JsonVisualizerProps) {
               }
             >
               <Github className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">
-                thatbeautifuldream/json-visualizer
-              </span>
+              <span className="hidden sm:inline">json-visualizer</span>
             </Button>
             <ModeToggle />
           </div>
