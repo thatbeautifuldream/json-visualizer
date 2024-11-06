@@ -71,7 +71,7 @@ export function JsonVisualizer({ initialShareId }: JsonVisualizerProps) {
               <div className="block sm:hidden">
                 <Braces className="w-4 h-4" />
               </div>
-              <span className="hidden sm:block">JSON Visualizer</span>
+              <span className="hidden sm:block">JSON Visualiser</span>
             </Link>
             <TabsList className="bg-gray-200 dark:bg-gray-900">
               <TabsTrigger

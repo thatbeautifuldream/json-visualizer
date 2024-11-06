@@ -27,7 +27,7 @@ export function Header({ children, className }: HeaderProps) {
           <div className="block sm:hidden">
             <Braces className="w-4 h-4" />
           </div>
-          <span className="hidden sm:block">JSON Visualizer</span>
+          <span className="hidden sm:block">JSON Visualiser</span>
         </Link>
         {children}
       </div>

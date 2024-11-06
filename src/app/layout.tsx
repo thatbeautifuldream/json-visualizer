@@ -6,8 +6,8 @@ import "./globals.css";
 const raleway = Raleway({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "JSON Visualizer",
-  description: "A tool to visualize and format JSON data",
+  title: "JSON Visualiser",
+  description: "A tool to visualise and format JSON data",
 };
 
 export default function RootLayout({

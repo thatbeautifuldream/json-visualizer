@@ -1,12 +1,12 @@
-# JSON Visualizer
+# JSON Visualiser
 
-An application for visualizing, sharing, and analyzing JSON data with multiple viewing modes and AI-powered explanations.
+An application for visualising, sharing, and analyzing JSON data with multiple viewing modes and AI-powered explanations.
 
-![JSON Visualizer Screenshot](public/screenshot.png)
+![JSON Visualiser Screenshot](public/screenshot.png)
 
 ## Features
 
-- 🎯 **Multiple Visualization Modes**
+- 🎯 **Multiple Visualisation Modes**
 
   - Raw Input: Edit and validate JSON with syntax highlighting
   - Tree View: Hierarchical representation of JSON data

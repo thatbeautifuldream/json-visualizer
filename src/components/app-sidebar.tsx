@@ -28,8 +28,8 @@ const sidebarItems: SidebarItem[] = [
     icon: HomeIcon,
   },
   {
-    title: "JSON Visualizer",
-    href: "/visualizer",
+    title: "JSON Visualiser",
+    href: "/visualiser",
     icon: Code2Icon,
   },
   {
@@ -52,7 +52,7 @@ export function AppSidebar() {
       <ScrollArea className="flex-1">
         <div className="space-y-4 py-4">
           <div className="px-3 py-2">
-            <h2 className="mb-2 px-4 text-lg font-semibold">JSON Visualizer</h2>
+            <h2 className="mb-2 px-4 text-lg font-semibold">JSON Visualiser</h2>
             <div className="space-y-1">
               {sidebarItems.map((item) => (
                 <Button
