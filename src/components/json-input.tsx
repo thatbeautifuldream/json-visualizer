@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Skeleton } from "./ui/skeleton";
+import { TypeGeneratorModal } from "@/components/type-generator-modal";
 
 interface SharedJsonMetadata {
   title: string;
@@ -105,6 +106,7 @@ export function JsonInput({
                 <Copy className="w-4 h-4 md:mr-2" />
                 <span className="hidden md:inline">Copy</span>
               </Button>
+              <TypeGeneratorModal jsonInput={jsonInput} />
             </>
           ) : (
             <>
@@ -132,6 +134,7 @@ export function JsonInput({
                 <Trash className="w-4 h-4 md:mr-2" />
                 <span className="hidden md:inline">Clear</span>
               </Button>
+              <TypeGeneratorModal jsonInput={jsonInput} />
             </>
           )}
         </div>
