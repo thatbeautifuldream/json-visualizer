@@ -2,15 +2,24 @@
 
 An application for visualising, sharing, and analyzing JSON data with multiple viewing modes and AI-powered explanations.
 
-![JSON Visualiser Screenshot](public/screenshot.png)
+
 
 ## Features
 
 - 🎯 **Multiple Visualisation Modes**
 
   - Raw Input: Edit and validate JSON with syntax highlighting
+
+<img width="1205" alt="image" src="https://github.com/user-attachments/assets/09cfbc08-6d96-4e9a-92fb-f6a39b266a0a">
+
   - Tree View: Hierarchical representation of JSON data
+
+<img width="1205" alt="Screenshot 2024-11-06 at 9 19 19 AM" src="https://github.com/user-attachments/assets/1cc043e6-d8df-41b2-a02a-eaf0fb3d5534">
+
   - Grid View: Tabular view for array-based JSON
+
+<img width="1205" alt="Screenshot 2024-11-06 at 9 19 28 AM" src="https://github.com/user-attachments/assets/2854ad53-b62c-420a-a33a-9c59f1974275">
+
   - AI Analysis: Get AI-powered explanations of your JSON structure
 
 - 🔄 **Real-time Validation**
@@ -27,6 +36,10 @@ An application for visualising, sharing, and analyzing JSON data with multiple v
 
   - Generate shareable links for JSON snippets
   - View shared JSON with metadata
+
+<img width="1205" alt="Screenshot 2024-11-06 at 9 19 48 AM" src="https://github.com/user-attachments/assets/073f219f-cad1-4467-b35e-73442a38dc2b">
+
+<img width="1205" alt="Screenshot 2024-11-06 at 9 20 11 AM" src="https://github.com/user-attachments/assets/30499df8-8ed1-43fa-8848-095394573563">
 
 ## Tech Stack
 
