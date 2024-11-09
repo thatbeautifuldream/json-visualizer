@@ -3,13 +3,13 @@ import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
 import { z } from "zod";
 
-// Input schema
+export const maxDuration = 60;
+
 const InputSchema = z.object({
   apiKey: z.string().optional(),
   json: z.record(z.unknown()),
 });
 
-// Output schema
 const ExplanationStep = z.object({
   explanation: z.string(),
   output: z.string(),
