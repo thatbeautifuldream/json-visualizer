@@ -13,10 +13,10 @@ import {
 } from "@/lib/stores/json-visualizer-store";
 import { Braces, Github } from "lucide-react";
 import Link from "next/link";
-import { useEffect } from "react";
 import { ShareDialog } from "@/components/share-dialog";
 import { fetchSharedJson } from "@/lib/services/share";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 interface JsonVisualizerProps {
   initialShareId?: string;
@@ -34,22 +34,27 @@ export function JsonVisualizer({ initialShareId }: JsonVisualizerProps) {
     setError,
   } = useJsonVisualizerStore();
 
-  useEffect(() => {
-    try {
-      const parsed = JSON.parse(jsonInput || "");
-      setParsedJson(parsed);
-      setError(null);
-    } catch (err) {
-      setError("Invalid JSON: " + (err as Error).message);
-      setParsedJson(null);
-    }
-  }, [jsonInput, setParsedJson, setError]);
-
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isSuccess, isError } = useQuery({
     enabled: !!initialShareId,
     queryKey: ["sharedJson", initialShareId],
     queryFn: () => fetchSharedJson(initialShareId || ""),
   });
+
+  useEffect(() => {
+    if (isSuccess && data?.json) {
+      setJsonInput(data.json);
+      try {
+        const parsed = JSON.parse(data.json);
+        setParsedJson(parsed);
+        setError(null);
+      } catch (e) {
+        setError("Invalid JSON format");
+      }
+    }
+    if (isError) {
+      setError("Error fetching shared JSON");
+    }
+  }, [isSuccess, isError, data, setJsonInput, setParsedJson, setError]);
 
   const handleJsonInputChange = (value: string) => {
     setJsonInput(value);
@@ -121,7 +126,7 @@ export function JsonVisualizer({ initialShareId }: JsonVisualizerProps) {
         </div>
         <div className="flex-grow flex flex-col">
           <TabsContent value="input" className="flex-grow p-4">
-            {data ? (
+            {isSuccess ? (
               <JsonInput
                 jsonInput={jsonInput}
                 setJsonInput={handleJsonInputChange}
