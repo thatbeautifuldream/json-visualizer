@@ -47,7 +47,7 @@ export function JsonVisualizer({ initialShareId }: JsonVisualizerProps) {
         const parsed = JSON.parse(data.json);
         setParsedJson(parsed);
         setError(null);
-      } catch (e) {
+      } catch {
         setError("Invalid JSON format");
       }
     }
