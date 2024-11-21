@@ -11,7 +11,7 @@ interface JsonViewProps {
   error: string | null;
 }
 
-export function JsonView({ parsedJson, error }: JsonViewProps) {
+export function JsonTree({ parsedJson, error }: JsonViewProps) {
   const { theme } = useTheme();
 
   return (

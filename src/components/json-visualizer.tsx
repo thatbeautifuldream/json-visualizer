@@ -3,20 +3,20 @@
 import { JsonExplanation } from "@/components/json-explanation";
 import { JsonGrid } from "@/components/json-grid";
 import { JsonInput } from "@/components/json-input";
-import { JsonView } from "@/components/json-view";
 import { ModeToggle } from "@/components/mode-toggle";
+import { ShareDialog } from "@/components/share-dialog";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { fetchSharedJson } from "@/lib/services/share";
 import {
   TabValue,
   useJsonVisualizerStore,
 } from "@/lib/stores/json-visualizer-store";
+import { useQuery } from "@tanstack/react-query";
 import { Braces, Github } from "lucide-react";
 import Link from "next/link";
-import { ShareDialog } from "@/components/share-dialog";
-import { fetchSharedJson } from "@/lib/services/share";
-import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { JsonTree } from "./json-true";
 
 interface JsonVisualizerProps {
   initialShareId?: string;
@@ -58,6 +58,13 @@ export function JsonVisualizer({ initialShareId }: JsonVisualizerProps) {
 
   const handleJsonInputChange = (value: string) => {
     setJsonInput(value);
+    try {
+      const parsed = JSON.parse(value);
+      setParsedJson(parsed);
+      setError(null);
+    } catch {
+      setError("Invalid JSON format");
+    }
   };
 
   return (
@@ -143,7 +150,7 @@ export function JsonVisualizer({ initialShareId }: JsonVisualizerProps) {
             )}
           </TabsContent>
           <TabsContent value="tree" className="flex-grow p-4">
-            {parsedJson && <JsonView parsedJson={parsedJson} error={error} />}
+            {parsedJson && <JsonTree parsedJson={parsedJson} error={error} />}
           </TabsContent>
           <TabsContent value="grid" className="flex-grow p-4">
             {parsedJson && <JsonGrid data={parsedJson} error={error} />}
